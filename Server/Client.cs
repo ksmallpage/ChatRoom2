@@ -21,23 +21,21 @@ namespace Server
             
 
         }
-        public void Send(string Message)
+        public void Send(Message Message)
         {
-            byte[] message = Encoding.ASCII.GetBytes(Message);
+            byte[] message = Encoding.ASCII.GetBytes(Message.Body);
             stream.Write(message, 0, message.Count());
         }
-        public string Recieve()
+        public Message Recieve()
         {
-            while (true)
             {
                 byte[] recievedMessage = new byte[256];
                 stream.Read(recievedMessage, 0, recievedMessage.Length);
                 string recievedMessageString = Encoding.ASCII.GetString(recievedMessage);
                 Console.WriteLine(recievedMessageString);
-                return recievedMessageString;
+                Message message = new Message(this, recievedMessageString);
+                return message;
             }
-           
         }
-
     }
 }

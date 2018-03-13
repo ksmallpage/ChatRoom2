@@ -16,52 +16,54 @@ namespace Server
         TcpListener server;
         public Server()
         {
-         
-            server = new TcpListener(IPAddress.Parse("192.168.0.112"), 9999);
+
+            server = new TcpListener(IPAddress.Parse("192.168.0.130"), 9999);
             server.Start();
-            
+
+
 
         }
         public void Run()
         {
             Thread t = new Thread(AcceptClient);
             t.Start();
-            while (true)
-            {
-                AcceptClient();
 
-            }
         }
 
-            public void Message(Client client)
+        public void Message(Client client)
         {
             while (true)
             {
-                string message = client.Recieve();
+                Message message = client.Recieve();
                 Respond(message);
+
             }
-            
         }
-  
-        
-        private  void AcceptClient()
+
+
+
+
+        private void AcceptClient()
         {
-                
-            
+            while (true)
+            {
                 TcpClient clientSocket = default(TcpClient);
-            
                 clientSocket = server.AcceptTcpClient();
                 Console.WriteLine("Connected");
                 NetworkStream stream = clientSocket.GetStream();
                 client = new Client(stream, clientSocket);
-                Thread threadMessage = new Thread( new ThreadStart( () =>  Message(client)));
-                 threadMessage.Start();
+                Thread threadMessage = new Thread(new ThreadStart(() => Message(client)));
+                threadMessage.Start();
+            }         
 
         }
-        private void Respond(string body)
+
+        private void Respond(Message body)
         {
               
              client.Send(body);   
         }
+
+
     }
 }
