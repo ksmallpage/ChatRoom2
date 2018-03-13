@@ -19,27 +19,32 @@ namespace Server
          
             server = new TcpListener(IPAddress.Parse("192.168.0.112"), 9999);
             server.Start();
-            Thread t = new Thread(Run);
-            t.Start();
-
-        }
-        public  void Run()
-        {
             
 
+        }
+        public void Run()
+        {
+            Thread t = new Thread(AcceptClient);
+            t.Start();
             while (true)
             {
                 AcceptClient();
+
+            }
+        }
+
+            public void Message(Client client)
+        {
+            while (true)
+            {
                 string message = client.Recieve();
                 Respond(message);
             }
             
-            
-                
-                
-            
         }
-        private void AcceptClient()
+  
+        
+        private  void AcceptClient()
         {
                 
             
@@ -49,13 +54,9 @@ namespace Server
                 Console.WriteLine("Connected");
                 NetworkStream stream = clientSocket.GetStream();
                 client = new Client(stream, clientSocket);
-            
-                
+                Thread threadMessage = new Thread( new ThreadStart( () =>  Message(client)));
+                 threadMessage.Start();
 
-               
-            
-            
-        
         }
         private void Respond(string body)
         {
