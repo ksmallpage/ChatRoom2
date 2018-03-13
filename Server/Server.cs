@@ -19,11 +19,11 @@ namespace Server
          
             server = new TcpListener(IPAddress.Parse("192.168.0.130"), 9999);
             server.Start();
-            Thread t = new Thread(Run);  //
+            Thread t = new Thread(Run);
             t.Start();
 
         }
-        public  void Run()  //
+        public  void Run()
         {
             while (true)
             {
