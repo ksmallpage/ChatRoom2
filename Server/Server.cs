@@ -15,16 +15,15 @@ namespace Server
     {
         public static Client client;
         TcpListener server;
-     //   Queue serverQueue = new Queue();
-      //  Queue myQ = new Queue();
+
+        Queue<Message> messages;
+
         public Server()
         {
 
             server = new TcpListener(IPAddress.Parse("192.168.0.112"), 9999);
             server.Start();
-
-
-
+            messages = new Queue<Message>();
         }
         public void Run()
         {
@@ -38,13 +37,20 @@ namespace Server
             while (true)
             {
                 Message message = client.Recieve();
+                messages.Enqueue(message);
                 Respond(message);
-
             }
         }
 
+        public void SendMessager()
+        {
+            while (true)
+            {
+                Message sendmeassage = messages.Dequeue();
+                client.Send(sendmeassage);
 
-
+            }
+        }
 
         private void AcceptClient()
         {

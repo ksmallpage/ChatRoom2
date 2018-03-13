@@ -23,8 +23,12 @@ namespace Server
         }
         public void Send(Message Message)
         {
-            byte[] message = Encoding.ASCII.GetBytes(Message.Body);
-            stream.Write(message, 0, message.Count());
+            while (true)
+            {
+                byte[] message = Encoding.ASCII.GetBytes(Message.Body);
+                stream.Write(message, 0, message.Count());
+            }
+            
         }
         public Message Recieve()
         {
@@ -37,5 +41,9 @@ namespace Server
                 return message;
             }
         }
+
+
+        //queyuw
+
     }
 }
