@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server
@@ -17,6 +18,8 @@ namespace Server
             stream = Stream;
             client = Client;
             UserId = "495933b6-1762-47a1-b655-483510072e74";
+            
+
         }
         public void Send(Message Message)
         {
@@ -34,5 +37,8 @@ namespace Server
                 return message;
             }
         }
+
+        //queyuw
+
     }
 }
