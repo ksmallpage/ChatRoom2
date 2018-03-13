@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace Server
     {
         public static Client client;
         TcpListener server;
+     //   Queue serverQueue = new Queue();
+      //  Queue myQ = new Queue();
         public Server()
         {
 
-            server = new TcpListener(IPAddress.Parse("192.168.0.130"), 9999);
+            server = new TcpListener(IPAddress.Parse("192.168.0.112"), 9999);
             server.Start();
 
 
