@@ -21,14 +21,14 @@ namespace Server
         }
         public void Send(Message Message)
         {
-            while (true)
-            {
+           
                 byte[] message = Encoding.ASCII.GetBytes(Message.Body);
                 stream.Write(message, 0, message.Count());
-            }
+            
         }
         public Message Recieve()
         {
+            while(true)
             {
                 byte[] recievedMessage = new byte[256];
                 stream.Read(recievedMessage, 0, recievedMessage.Length);

@@ -21,10 +21,12 @@ namespace Server
 
         public Server()
         {
+
             server = new TcpListener(IPAddress.Parse("192.168.0.135"), 9999);
             server.Start();
             listOfClients = new Dictionary<int, Client>();
             messages = new Queue<Message>();
+            MessageSender();
         }
 
         public void Run()
@@ -57,33 +59,53 @@ namespace Server
                 //create thread
                 Message message = client.Recieve();
                 messages.Enqueue(message);
-                Respond(message);
+                //\\    Respond(message);
             }
         }
 
-        public void MessageSender(Client client)
+        public void MessageSender()
         {
+
             while (true)
             {
-                Message sendmeassage = messages.Dequeue();
-                client.Send(sendmeassage);
-                //Respond(message);
-            }
-        }
-        private void Respond(Message body)
-        {
-            client.Send(body);
-        }
+                foreach (var message in messages)
+                {
+                    messages.Dequeue();
 
-        public void captureClient(int key, Client client)
-        {
-        listOfClients.Add(key, client);
+
+                    for (int key = 1; key < listOfClients.Count; key++)
+                    {
+                        client.Send(message);
+                    }
+
+                    //  foreach (var client in listOfClients)
+                    //  {
+                    //     client.Send(message);
+                }
+            }
+
+
+
+
+
+            //Message sendmeassage =
+            ////client.Send(sendmeassage);
+            //// Respond(message);
         }
+    
+
+          private void Respond(Message body)
+          {
+            client.Send(body);
+          }
+          public void captureClient(int key, Client client)
+          {
+
+                 listOfClients.Add(key, client);
+         }
     }
 
 }
-
-
 
 
 
