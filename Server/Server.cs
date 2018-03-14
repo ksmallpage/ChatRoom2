@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,14 @@ namespace Server
         public static Client client;
         TcpListener server;
         Queue<Message> messages;
-        Dictionary<string, int> listOfClients;
+        Dictionary<int, Client> listOfClients;
+        int key;
 
         public Server()
         {
-            server = new TcpListener(IPAddress.Parse("192.168.0.130"), 9999);
+            server = new TcpListener(IPAddress.Parse("192.168.0.135"), 9999);
             server.Start();
-            listOfClients = new Dictionary<string, int>();  ///added
+            listOfClients = new Dictionary<int, Client>();  ///added
             messages = new Queue<Message>();
         }
         public void Run()
@@ -40,19 +42,30 @@ namespace Server
                 Console.WriteLine("Connected");
                 NetworkStream stream = clientSocket.GetStream();
                 client = new Client(stream, clientSocket);
-                listOfClients.Add(string, int);
-                Thread threadMessage = new Thread(new ThreadStart(() => Message(client)));
+                key++;
+                captureClient(key, client);
+                Thread threadMessage = new Thread(new ThreadStart(() => Message(client))); //thread
                 threadMessage.Start();
             }
 
         }
-
         public void Message(Client client)
         {
             while (true)
             {
+                //create thread
                 Message message = client.Recieve();
                 messages.Enqueue(message);
+                Respond(message);
+            }
+        }
+
+        public void SendMessager()
+        {
+            while (true)
+            {
+                Message sendmeassage = messages.Dequeue();
+                client.Send(sendmeassage);
             }
         }
 
@@ -71,6 +84,13 @@ namespace Server
         private void Respond(Message body)
         {
              client.Send(body);   
+        }
+
+        public void captureClient(int key, Client client)
+        {
+           
+
+            listOfClients.Add(key, client);
         }
 
 
