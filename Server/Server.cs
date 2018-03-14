@@ -18,21 +18,25 @@ namespace Server
         Queue<Message> messages;
         Dictionary<int, Client> listOfClients;
         int key;
+        Message messageToSend;
 
         public Server()
         {
 
-            server = new TcpListener(IPAddress.Parse("192.168.0.135"), 9999);
+            server = new TcpListener(IPAddress.Parse("192.168.0.133"), 9999);
             server.Start();
             listOfClients = new Dictionary<int, Client>();
             messages = new Queue<Message>();
-            MessageSender();
+
         }
 
         public void Run()
         {
             Thread t = new Thread(AcceptClient);
             t.Start();
+            Thread t1 = new Thread(MessageSender);
+            t1.Start();
+
 
         }
 
@@ -68,44 +72,47 @@ namespace Server
 
             while (true)
             {
-                foreach (var message in messages)
+                if (messages.Count > 0)
                 {
-                    messages.Dequeue();
-
-
-                    for (int key = 1; key < listOfClients.Count; key++)
-                    {
-                        client.Send(message);
-                    }
-
-                    //  foreach (var client in listOfClients)
-                    //  {
-                    //     client.Send(message);
+                    messageToSend = messages.Dequeue();
                 }
+                for (int key = 1; key < listOfClients.Count; key++)
+                {
+                    client.Send(messageToSend);
+                }
+
+                //  foreach (var client in listOfClients)
+                //  {
+                //     client.Send(message);
             }
-
-
-
-
-
-            //Message sendmeassage =
-            ////client.Send(sendmeassage);
-            //// Respond(message);
         }
-    
 
-          private void Respond(Message body)
-          {
+        private void Respond(Message body)
+        {
             client.Send(body);
-          }
-          public void captureClient(int key, Client client)
-          {
+        }
+        public void captureClient(int key, Client client)
+        {
 
-                 listOfClients.Add(key, client);
-         }
+            listOfClients.Add(key, client);
+        }
     }
-
 }
+
+
+
+
+
+
+        //Message sendmeassage =
+        ////client.Send(sendmeassage);
+        //// Respond(message);
+
+
+
+
+
+
 
 
 
