@@ -17,11 +17,12 @@ namespace Server
         TcpListener server;
 
         Queue<Message> messages;
+        private string clientName;
 
         public Server()
         {
 
-            server = new TcpListener(IPAddress.Parse("192.168.0.112"), 9999);
+            server = new TcpListener(IPAddress.Parse("192.168.0.133"), 9999);
             server.Start();
             messages = new Queue<Message>();
         }
@@ -57,10 +58,12 @@ namespace Server
             while (true)
             {
                 TcpClient clientSocket = default(TcpClient);
+                Console.WriteLine("Awaiting for client Connection");
                 clientSocket = server.AcceptTcpClient();
-                Console.WriteLine("Connected");
+                Console.WriteLine("what is your Name?");
+                string clientName = Console.ReadLine();
                 NetworkStream stream = clientSocket.GetStream();
-                client = new Client(stream, clientSocket);
+                client = new Client(stream, clientSocket, clientName);
                 Thread threadMessage = new Thread(new ThreadStart(() => Message(client)));
                 threadMessage.Start();
             }         
