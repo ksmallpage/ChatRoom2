@@ -60,10 +60,10 @@ namespace Server
                 TcpClient clientSocket = default(TcpClient);
                 Console.WriteLine("Awaiting for client Connection");
                 clientSocket = server.AcceptTcpClient();
-                Console.WriteLine("what is your Name?");
-                string clientName = Console.ReadLine();
+                Console.WriteLine("Connected");
+                    // call function Capture Client in Dictiontory
                 NetworkStream stream = clientSocket.GetStream();
-                client = new Client(stream, clientSocket, clientName);
+                client = new Client(stream, clientSocket);
                 Thread threadMessage = new Thread(new ThreadStart(() => Message(client)));
                 threadMessage.Start();
             }         
