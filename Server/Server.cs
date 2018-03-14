@@ -15,15 +15,19 @@ namespace Server
     {
         public static Client client;
         TcpListener server;
-
         Queue<Message> messages;
-        private string clientName;
+        Dictionary<int, Client> listOfClients;
+        int key;
+
+ 
+    
 
         public Server()
         {
 
             server = new TcpListener(IPAddress.Parse("192.168.0.133"), 9999);
             server.Start();
+            listOfClients = new Dictionary<int, Client>();  ///added
             messages = new Queue<Message>();
         }
         public void Run()
@@ -33,49 +37,59 @@ namespace Server
 
         }
 
-        public void Message(Client client)
-        {
-            while (true)
-            {
-                Message message = client.Recieve();
-                messages.Enqueue(message);
-                Respond(message);
-            }
-        }
-
-        public void SendMessager()
-        {
-            while (true)
-            {
-                Message sendmeassage = messages.Dequeue();
-                client.Send(sendmeassage);
-
-            }
-        }
-
-        private void AcceptClient()
+        private void AcceptClient()     ////moved from bottom
         {
             while (true)
             {
                 TcpClient clientSocket = default(TcpClient);
-                Console.WriteLine("Awaiting for client Connection");
                 clientSocket = server.AcceptTcpClient();
                 Console.WriteLine("Connected");
-                    // call function Capture Client in Dictiontory
                 NetworkStream stream = clientSocket.GetStream();
                 client = new Client(stream, clientSocket);
-                Thread threadMessage = new Thread(new ThreadStart(() => Message(client)));
+                key++;
+                captureClient(key, client);
+                Thread threadMessage = new Thread(new ThreadStart(() => Message(client))); //thread
                 threadMessage.Start();
-            }         
+            }
+
+        }
+        public void Message(Client client)
+        {
+            while (true)
+            {
+                //create thread
+                Message message = client.Recieve();
+                messages.Enqueue(message);
+                //Respond(message);
+            }
+        }
+
+        public void MessageSender(Client client)
+        {
+            while (true)
+            {
+
+                Message sendmeassage = messages.Dequeue();
+                client.Send(sendmeassage);
+                //Respond(message);
+            }
 
         }
 
         private void Respond(Message body)
         {
-              
-             client.Send(body);   
+            client.Send(body);
         }
 
+        public void captureClient(int key, Client client)
+        {
+
+
+            listOfClients.Add(key, client);
+        }
 
     }
-}
+
+ }
+
+

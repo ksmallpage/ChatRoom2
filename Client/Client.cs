@@ -17,6 +17,7 @@ namespace Client
             clientSocket = new TcpClient();
             clientSocket.Connect(IPAddress.Parse(IP), port);
             stream = clientSocket.GetStream();
+ 
         }
         public void Send()
         {
