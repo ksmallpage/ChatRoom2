@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class Client
+    class Client : IUser //added
     {
         NetworkStream stream;
         TcpClient client;
@@ -18,13 +18,14 @@ namespace Server
             stream = Stream;
             client = Client;
             UserId = "495933b6-1762-47a1-b655-483510072e74";
-            
-
         }
         public void Send(Message Message)
         {
-            byte[] message = Encoding.ASCII.GetBytes(Message.Body);
-            stream.Write(message, 0, message.Count());
+            while (true)
+            {
+                byte[] message = Encoding.ASCII.GetBytes(Message.Body);
+                stream.Write(message, 0, message.Count());
+            }
         }
         public Message Recieve()
         {
@@ -37,8 +38,5 @@ namespace Server
                 return message;
             }
         }
-
-        //queyuw
-
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class Message
+    class Message // either this is a iloggable or serviver is ilogger
     {
         public Client sender;
         public string Body;

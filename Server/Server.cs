@@ -15,11 +15,13 @@ namespace Server
         public static Client client;
         TcpListener server;
         Queue<Message> messages;
+        Dictionary<string, int> listOfClients;
+
         public Server()
         {
-
             server = new TcpListener(IPAddress.Parse("192.168.0.130"), 9999);
             server.Start();
+            listOfClients = new Dictionary<string, int>();  ///added
             messages = new Queue<Message>();
         }
         public void Run()
@@ -29,20 +31,7 @@ namespace Server
 
         }
 
-        public void Message(Client client)
-        {
-            while (true)
-            {
-                Message message = client.Recieve();
-                messages.Enqueue(message);
-                Message sendmeassage = messages.Dequeue();
-                client.Send(sendmeassage);
-                Respond(message);
-
-            }
-        }
-
-        private void AcceptClient()
+        private void AcceptClient()     ////moved from bottom
         {
             while (true)
             {
@@ -51,15 +40,36 @@ namespace Server
                 Console.WriteLine("Connected");
                 NetworkStream stream = clientSocket.GetStream();
                 client = new Client(stream, clientSocket);
+                listOfClients.Add(string, int);
                 Thread threadMessage = new Thread(new ThreadStart(() => Message(client)));
                 threadMessage.Start();
-            }         
+            }
 
         }
 
+        public void Message(Client client)
+        {
+            while (true)
+            {
+                Message message = client.Recieve();
+                messages.Enqueue(message);
+            }
+        }
+
+        public void MessageSender(Client client)
+        {
+            while (true)
+            {
+                Message sendmeassage = messages.Dequeue();
+                client.Send(sendmeassage);
+                //Respond(message);
+            }
+        }
+
+
+
         private void Respond(Message body)
         {
-              
              client.Send(body);   
         }
 
