@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Client
@@ -21,15 +22,25 @@ namespace Client
         }
         public void Send()
         {
-            string messageString = UI.GetInput();
-            byte[] message = Encoding.ASCII.GetBytes(messageString);
-            stream.Write(message, 0, message.Count());
+            Thread t = new Thread(Send);
+            t.Start();
+            while (true)
+            {
+                string messageString = UI.GetInput();
+                byte[] message = Encoding.ASCII.GetBytes(messageString);
+                stream.Write(message, 0, message.Count());
+            }
         }
         public void Recieve()
         {
-            byte[] recievedMessage = new byte[256];
-            stream.Read(recievedMessage, 0, recievedMessage.Length);
-            UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+            Thread t1 = new Thread(Send);
+            t1.Start();
+            while (true)
+            {
+                byte[] recievedMessage = new byte[256];
+                stream.Read(recievedMessage, 0, recievedMessage.Length);
+                UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+            }
         }
     }
 }

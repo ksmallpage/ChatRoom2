@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Client
@@ -10,7 +11,8 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            Client client = new Client("192.168.0.133", 9999);
+            Client client = new Client("192.168.0.105", 9999);
+            
             client.Send();
             client.Recieve();
             Console.ReadLine();

@@ -19,11 +19,12 @@ namespace Server
         Dictionary<int, Client> listOfClients;
         int key;
         Message messageToSend;
+        Client clientToSend;
 
         public Server()
         {
 
-            server = new TcpListener(IPAddress.Parse("192.168.0.133"), 9999);
+            server = new TcpListener(IPAddress.Parse("192.168.0.105"), 9999);
             server.Start();
             listOfClients = new Dictionary<int, Client>();
             messages = new Queue<Message>();
@@ -75,15 +76,15 @@ namespace Server
                 if (messages.Count > 0)
                 {
                     messageToSend = messages.Dequeue();
-                }
-                for (int key = 1; key < listOfClients.Count; key++)
-                {
-                    client.Send(messageToSend);
+                    foreach (var client in listOfClients)
+                    {
+                        if (listOfClients.ContainsKey(key))
+                            clientToSend = listOfClients[key];
+                            clientToSend.Send(messageToSend);
+
+                    }
                 }
 
-                //  foreach (var client in listOfClients)
-                //  {
-                //     client.Send(message);
             }
         }
 
