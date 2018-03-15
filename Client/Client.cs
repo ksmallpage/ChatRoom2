@@ -13,17 +13,21 @@ namespace Client
     {
         TcpClient clientSocket;
         NetworkStream stream;
+        
         public Client(string IP, int port)
+        
+        
         {
             clientSocket = new TcpClient();
             clientSocket.Connect(IPAddress.Parse(IP), port);
             stream = clientSocket.GetStream();
- 
+            new Thread(new ThreadStart(Send)).Start();
+            new Thread(new ThreadStart(Recieve)).Start();
+
         }
         public void Send()
         {
-            Thread t = new Thread(Send);
-            t.Start();
+
             while (true)
             {
                 string messageString = UI.GetInput();
@@ -33,8 +37,7 @@ namespace Client
         }
         public void Recieve()
         {
-            Thread t1 = new Thread(Send);
-            t1.Start();
+           
             while (true)
             {
                 byte[] recievedMessage = new byte[256];
