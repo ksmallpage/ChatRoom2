@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    interface IUser
+    interface ILogger
     {
-        void Send(Message Message);
-        Message Recieve();
+        void LogMessage(string message);
     }
 }

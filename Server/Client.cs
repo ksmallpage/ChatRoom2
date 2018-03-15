@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class Client : IUser //added
+    class Client //added
     {
         NetworkStream stream;
         TcpClient client;
